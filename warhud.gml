@@ -16,11 +16,11 @@ if !variable_global_exists("pluginOptions") {
     object_set_depth(global.pluginOptions,-130000); 
     object_event_add(global.pluginOptions,ev_create,0,'   
         menu_create(40, 140, 300, 200, 30);
-
+        
         if room != Options {
             menu_setdimmed();
         }
-
+        
         menu_addback("Back", "
             instance_destroy();
             if(room == Options)
@@ -45,7 +45,7 @@ object_event_add(global.pluginOptions,ev_create,0,'
     key1 = "WarHUD_style";
     //even dumber workaround
     quote = chr(39);
-
+    
     menu_addedit_select("WarHUD dropshadow style", "global.warhud_style", "
         gg2_write_ini(section, key1, argument0);
     ");
@@ -71,7 +71,7 @@ object_event_add(HealthHud,ev_draw,0,"
         instance_destroy();
         exit; 
     }
-
+    
     text_xpos = 45+24;
     text_ypos = 547+18;
     sprite_xpos = 11;
@@ -99,7 +99,7 @@ object_event_add(HealthHud,ev_draw,0,"
         c_shadow = c_bluteam;
     if(global.warhud_style == 2)
         c_shadow = $202020; //offblack
-        
+    
     //colors for HP # text, red = can die in one hit; orange = taking too much heat
     if(hp <= 55)
         hpColor = c_red;
@@ -107,7 +107,7 @@ object_event_add(HealthHud,ev_draw,0,"
         hpColor = c_orange;
     else 
         hpColor = offwhite;
-
+    
     draw_set_valign(fa_center);
     draw_set_halign(fa_left);
     hpText = string(ceil(max(hp,0)));
