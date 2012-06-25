@@ -1,4 +1,4 @@
-//Complete overhaul to GG2's HUD. Inspired by RevanXP's TF2 HUD.
+//Complete overhaul to GG2's HUD. Inspired by RevanXP's TF2 HUD. ISC license.
 //View/edit with a fixed width font. Some punctuation is vertically aligned.
 global.warhud_namespace = "Plugins/warhud/";
 
@@ -41,13 +41,13 @@ if !variable_global_exists("pluginOptions") {
 //add menu option/s
 object_event_add(global.pluginOptions,ev_create,0,'
     //very dumb workaround
-    section = global.warhud_namespace;
-    key1 = "WarHUD_style";
+    warhud_section = global.warhud_namespace;
+    warhud_key1 = "WarHUD_style";
     //even dumber workaround
     quote = chr(39);
     
     menu_addedit_select("WarHUD dropshadow style", "global.warhud_style", "
-        gg2_write_ini(section, key1, argument0);
+        gg2_write_ini(warhud_section, warhud_key1, argument0);
     ");
     menu_add_option(0, "Off");
     menu_add_option(1, "Team colored");
