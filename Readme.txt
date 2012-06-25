@@ -15,6 +15,8 @@ noise entirely.
 TODO/Checklist:
 [x] Basic health
     - Consider icon outline change for being ubered
+    - Changes color based on health (red 55 > orange 50% > white any)
+    - Dropshadow options (NO outlines, too clunky)
 [ ] Basic ammo
 [ ] Charge bars and other counters
 [ ] Timers

@@ -60,7 +60,7 @@ object_event_add(HealthHud,ev_create,0,"
     sprite_index = sprite_add_sprite(global.warhud_namespace + 'CharacterHUD.gmspr');
     health_sprite = sprite_add_sprite(global.warhud_namespace + 'Healthbar.gmspr');
     offwhite  = make_color_rgb(217,217,183); // Old (too light) color values ripped from stock HUD:
-    c_redteam = make_color_rgb( 64, 16,  0); // (165, 70, 64);
+    c_redteam = make_color_rgb( 42, 24, 16); // (165, 70, 64);
     c_bluteam = make_color_rgb( 16, 32, 64); // ( 73, 93,104); (They might be useful to someone.)
 ");
 
