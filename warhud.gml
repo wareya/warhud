@@ -15,19 +15,19 @@ if !variable_global_exists("pluginOptions") {
     object_set_parent(global.pluginOptions,OptionsController);  
     object_set_depth(global.pluginOptions,-130000); 
     object_event_add(global.pluginOptions,ev_create,0,'   
-    menu_create(40, 140, 300, 200, 30);
+        menu_create(40, 140, 300, 200, 30);
 
-    if room != Options {
-        menu_setdimmed();
-    }
+        if room != Options {
+            menu_setdimmed();
+        }
 
-    menu_addback("Back", "
-        instance_destroy();
-        if(room == Options)
-            instance_create(0,0,MainMenuController);
-        else
-            instance_create(0,0,InGameMenuController);
-    ");
+        menu_addback("Back", "
+            instance_destroy();
+            if(room == Options)
+                instance_create(0,0,MainMenuController);
+            else
+                instance_create(0,0,InGameMenuController);
+        ");
     ');
     
     object_event_add(InGameMenuController,ev_create,0,'
