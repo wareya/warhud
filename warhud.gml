@@ -43,8 +43,6 @@ object_event_add(global.pluginOptions,ev_create,0,'
     //very dumb workaround
     warhud_section = global.warhud_namespace;
     warhud_key1 = "WarHUD_style";
-    //even dumber workaround
-    quote = chr(39);
     
     menu_addedit_select("WarHUD dropshadow style", "global.warhud_style", "
         gg2_write_ini(warhud_section, warhud_key1, argument0);
