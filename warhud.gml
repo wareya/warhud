@@ -1,7 +1,8 @@
-//Complete overhaul to GG2's HUD. Inspired by RevanXP's TF2 HUD. ISC license.
-//View/edit with a fixed width font. Some punctuation is vertically aligned.
+//Complete overhaul to GG2's HUD. Inspired by RevanXP's TF2 HUD. Code which isn't from GG2 itself is ISC licensed. Code which is from GG2 is GPL v3 licensed.
+//View/edit with a fixed width font. Some code is vertically aligned.
 global.warhud_namespace = "Plugins/warhud/";
-
+global.warhud_hpcross_box = sprite_add_sprite(global.warhud_namespace + 'CharacterHUD.gmspr');
+global.warhud_hpcross = sprite_add_sprite(global.warhud_namespace + 'Healthbar.gmspr');
 
 //Set up first
 
@@ -55,11 +56,12 @@ object_event_add(global.pluginOptions,ev_create,0,'
 //HUD stuff now
 
 object_event_add(HealthHud,ev_create,0,"
-    sprite_index = sprite_add_sprite(global.warhud_namespace + 'CharacterHUD.gmspr');
-    health_sprite = sprite_add_sprite(global.warhud_namespace + 'Healthbar.gmspr');
-    offwhite  = make_color_rgb(217,217,183); // Old (too light) color values ripped from stock HUD:
-    c_redteam = make_color_rgb( 42, 24, 16); // (165, 70, 64);
-    c_bluteam = make_color_rgb( 16, 32, 64); // ( 73, 93,104); (They might be useful to someone.)
+    sprite_index  = global.warhud_hpcross_box;
+    health_sprite = global.warhud_hpcross;
+    c_offwhite  = make_color_rgb(217,217,183); // Old (too light) color values ripped from stock HUD:
+    c_redteam   = make_color_rgb( 42, 24, 16); // (165, 70, 64);
+    c_bluteam   = make_color_rgb( 16, 32, 64); // ( 73, 93,104); (They might be useful to someone.)
+    c_offblack  = $202020;    //( 32, 32, 32);
 ");
 
 object_event_clear(HealthHud,ev_draw,0);
@@ -78,33 +80,37 @@ object_event_add(HealthHud,ev_draw,0,"
     icon_ypos = 545;
     hp = global.myself.object.hp;
     maxHp = global.myself.object.maxHp;
+    scale = 2;
     event_user(0);
     
     //health icon outline and backing
-    draw_sprite_ext(sprite_index , 0, view_xview[0]+sprite_xpos, view_yview[0]+sprite_ypos, 2, 2, 0, c_white, 1);
-    draw_sprite_ext(health_sprite, 0, view_xview[0]+sprite_xpos, view_yview[0]+sprite_ypos, 2, 2, 0, c_black, 1);
+    draw_sprite_ext(sprite_index , 0, view_xview[0]+sprite_xpos, view_yview[0]+sprite_ypos, scale, scale, 0, c_white, 1);
+    draw_sprite_ext(health_sprite, 0, view_xview[0]+sprite_xpos, view_yview[0]+sprite_ypos, scale, scale, 0, c_black, 1);
     
     //draw dynamic colored health icon
-    //TODO: Optimize to one sprite draw
+    //TODO: Optimize to one sprite draw w/ prepared color blend
+    icon_yoffset = 10;
+    icon_ysize = 17;
     hppixels = hp/maxHp*17;
-    draw_sprite_part_ext(health_sprite,0,0,(17-hppixels)+10,sprite_width,hppixels+1,view_xview[0]+icon_xpos, view_yview[0]+icon_ypos+(17-hppixels)*2,2,2,c_red,1);
-    draw_sprite_part_ext(health_sprite,0,0,(17-hppixels)+10,sprite_width,hppixels+1,view_xview[0]+icon_xpos, view_yview[0]+icon_ypos+(17-hppixels)*2,2,2,c_green,hp/maxHp);
+    
+    draw_sprite_part_ext(health_sprite,0,0,(icon_ysize-hppixels)+icon_yoffset,sprite_width,hppixels+1,view_xview[0]+icon_xpos, view_yview[0]+icon_ypos+(icon_ysize-hppixels)*scale,scale,scale,merge_color(c_red,c_green,hp/maxHp),1);
     
     //start picking HP # text colors
     if(global.myself.team == TEAM_RED)
         c_shadow = c_redteam;
     if(global.myself.team == TEAM_BLUE)
         c_shadow = c_bluteam;
-    if(global.warhud_style == 2)
-        c_shadow = $202020; //offblack
+    if(global.warhud_style == 2 or (hp <= 55 or hp <= maxHp/2 and global.myself.team == TEAM_BLUE))
+        //logic to prevent blue on red hue clashing at low health on blu team w/ team colored dropshadow option
+        c_shadow = c_offblack; //offblack
     
     //colors for HP # text, red = can die in one hit; orange = taking too much heat
     if(hp <= 55)
         hpColor = c_red;
-    else if(hp <= (maxHp/2))
+    else if(hp <= maxHp/2)
         hpColor = c_orange;
     else 
-        hpColor = offwhite;
+        hpColor = c_offwhite;
     
     draw_set_valign(fa_center);
     draw_set_halign(fa_left);
