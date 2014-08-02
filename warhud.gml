@@ -11,11 +11,11 @@ global.warhud_style = ini_read_real(global.warhud_namespace,"WarHUD_style",1);
 ini_close();
 
 //make a new menu for plugin options
-if !variable_global_exists("pluginOptions") {
-    global.pluginOptions = object_add();
-    object_set_parent(global.pluginOptions,OptionsController);  
-    object_set_depth(global.pluginOptions,-130000); 
-    object_event_add(global.pluginOptions,ev_create,0,'   
+if !variable_global_exists("neoPluginOptions") {
+    global.neoPluginOptions = object_add();
+    object_set_parent(global.neoPluginOptions,OptionsController);  
+    object_set_depth(global.neoPluginOptions,-130000); 
+    object_event_add(global.neoPluginOptions,ev_create,0,'   
         menu_create(40, 140, 300, 200, 30);
         
         if room != Options {
@@ -31,16 +31,25 @@ if !variable_global_exists("pluginOptions") {
         ");
     ');
     
-    object_event_add(InGameMenuController,ev_create,0,'
+    object_event_add(OptionsController,ev_create,0,'
+		/* dumb workaround to make Back occur after Plugin Options */
+		items -= 1;
         menu_addlink("Plugin Options", "
+            instance_create(0,0,global.neoPluginOptions);
             instance_destroy();
-            instance_create(0,0,global.pluginOptions);
         ");
+		menu_addback("Back", "
+			instance_destroy();
+			if(room == Options)
+				room_goto_fix(Menu);
+			else
+				instance_create(0,0,InGameMenuController);
+		");
     ');
 } 
 
 //add menu option/s
-object_event_add(global.pluginOptions,ev_create,0,'
+object_event_add(global.neoPluginOptions,ev_create,0,'
     //very dumb workaround
     warhud_section = global.warhud_namespace;
     warhud_key1 = "WarHUD_style";
@@ -72,12 +81,16 @@ object_event_add(HealthHud,ev_draw,0,"
         exit; 
     }
     
+    /*
+    xsize = view_wview[0];
+    ysize = view_hview[0];
+    */
     text_xpos = 45+24;
-    text_ypos = 547+18;
+    text_ypos = view_hview[0]-35;
     sprite_xpos = 11;
-    sprite_ypos = 525;
+    sprite_ypos = view_hview[0]-75;
     icon_xpos = 11;
-    icon_ypos = 545;
+    icon_ypos = view_hview[0]-55;
     hp = global.myself.object.hp;
     maxHp = global.myself.object.maxHp;
     scale = 2;
